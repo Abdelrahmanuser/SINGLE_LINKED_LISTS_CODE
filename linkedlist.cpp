@@ -261,13 +261,13 @@ void dominantTransport(IndexLinkedList* citya, IndexLinkedList* cityb, IndexLink
     cout << "Age Group: " << group << endl;
     cout << "Most common transport: " << highest_label << " with count: " << highest << endl;
     cout << "Total emissions: " << total_emissions << " Kg CO2" << endl;
-    cout << "Total residents: " << res_count << endl;
+    cout << "Average Carbon Emissions per resident in the Age Group of: " << group<<" " << total_emissions / res_count <<endl  ; 
 }
 int main () 
 {
     /* Working on Question 4 */ 
-    // age categorization 
-    /*
+    // age categorization  + Total Carbon Emissions + Average Carbon Emissions per resident . 
+    
     LinkedList* citya = implement_dataset("citya.csv");
     LinkedList* cityb = implement_dataset("cityb.csv");
     LinkedList* cityc = implement_dataset("cityc.csv");
@@ -279,7 +279,7 @@ int main ()
     dominantTransport(cityACategories.workingAdultsEarly, cityBCategories.workingAdultsEarly, cityCCategories.workingAdultsEarly, "Working Adults Early");
     dominantTransport(cityACategories.workingAdultsLate, cityBCategories.workingAdultsLate, cityCCategories.workingAdultsLate, "Working Adults Late");
     dominantTransport(cityACategories.seniorCitizens, cityBCategories.seniorCitizens, cityCCategories.seniorCitizens, "Senior Citizens");
-    */ 
+    
    // 
 
 
