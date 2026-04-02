@@ -1,7 +1,0 @@
-Things to take note for the tasks 
-1- For task 4 it is prefered to conduct the filtering in
-    a semantic manner 
-    Since the age group isn't stored in the node and is only 
-    needed for analysis, computing it on the fly during traversal
-    (Option 1 or enum without adding to Node)
-    is cleaner — no need to modify the existing struct.

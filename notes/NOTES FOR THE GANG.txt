@@ -1,0 +1,7 @@
+# Notes for the hommies working with me on Question 7 Take note 
+taht the jump search algorithm can not be really applied on Range Queries because in 
+essence the jump search could easily jump over some values that we are supposed to be included like for example 
+we have a jump size of 17 then we reach a node where this node is part of the range 
+but 3 nodes behind it were also part of the range so that would not it also work - 
+because in essence jump search is designed to return one value not a range of values and for question 7 they are 
+all  multi result searches 

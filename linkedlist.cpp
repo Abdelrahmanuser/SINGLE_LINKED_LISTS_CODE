@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
+#include <cmath>
 
 using namespace std ; 
 enum  class ModeofTransport 
@@ -157,6 +158,9 @@ ModeofTransport stringToTransport (string value )
     if (value == "School Bus")    return ModeofTransport :: SchoolBus ;
     return ModeofTransport :: Walking ; // as the default return statement 
 }
+int count_residents_a  = 0 ; 
+int count_residents_b = 0 ; 
+int count_residents_c = 0 ;  
 
 LinkedList*  implement_dataset (string file_name ) 
 {
@@ -209,6 +213,9 @@ LinkedList*  implement_dataset (string file_name )
         // this basiaclly populates the attributes of the node n  ( take note n is an address)
         n -> next = nullptr ; 
         city -> insert_node(n) ;// now we have inserted the node 
+        if (file_name == "citya.csv") count_residents_a ++ ; 
+        else if (file_name == "cityb.csv") count_residents_b ++ ; 
+        else if (file_name == "cityc.csv") count_residents_c ++ ;   
     }
     return city ; 
 
@@ -506,6 +513,8 @@ void sortingExperiment(LinkedList* list, string datasetLabel, SortKey key)
     delete[] arr;
 }
 
+
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 int main ()
@@ -548,8 +557,21 @@ int main ()
     sortingExperiment(citya, "City A", SortKey::Age);
     sortingExperiment(cityb, "City B", SortKey::DailyDistance);
     sortingExperiment(cityc, "City C", SortKey::CarbonEmission);
+    Node* current = citya -> Head ; 
 
-   //
+    while (current != nullptr ) 
+    {
+        cout << current ->  Age <<endl ; 
+        current = current -> next ; // I wanna see if ages are actually sorted 
+
+    }
+    
+   // Question 7 Implementing search algorithm 
+
+   // In essence this is an attempt to apply Jump search on the sorted List of city A - which 
+   // is sorted by Age : 
+
+
 
 
     
