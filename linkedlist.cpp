@@ -371,7 +371,13 @@ int countNodes(LinkedList* list)
     while (cur != nullptr) { count++; cur = cur->next; }
     return count;
 }
-
+int countIndexNodes(IndexLinkedList* list) 
+{
+    int count = 0;
+    IndexNode* cur = list->Head;
+    while (cur != nullptr) { count++; cur = cur->next; }
+    return count;
+}
 // Bubble sort on linked list — swaps node data, not pointers
 void bubbleSortLinkedList(LinkedList* list, SortKey key)
 {
@@ -419,6 +425,32 @@ void bubbleSortArray(Node* arr, int n, SortKey key)
     }
 }
 
+
+void printSearchResults (IndexLinkedList* List , string label ) 
+{
+    cout << "These are the Results For " << label << endl ; 
+    cout << left
+         << setw(14) << "ResidentID"
+         << setw(6)  << "Age"
+         << setw(14) << "Transport"
+         << setw(14) << "Daily Dist"
+         << "Total Carbon Emissions \n";
+        cout << string(65,'-') <<endl; 
+    IndexNode* current = List -> Head ; 
+    while (current != nullptr ) 
+    {
+        cout << setw(14) << current -> original_value -> ResidentId ;
+        cout << setw(14) << current -> original_value -> Age  ;
+        cout << setw(14) <<   getTransportLabel( current -> original_value -> transport)  ;
+        cout << setw(14) << current -> original_value -> DailyDistance   ;
+        cout << setw(14) << current->original_value->CarbonEmissionFactor * current->original_value->DailyDistance * current->original_value->AverageDayPerMonth  ;
+        cout << endl ; 
+        current  = current -> next ; 
+    }
+
+    // data rows start from here 
+}
+
 // Print first maxRows entries of a sorted linked list
 void printSortedResults(LinkedList* list, string datasetLabel, string sortKeyLabel, int maxRows)
 {
@@ -452,7 +484,7 @@ void printSortedResults(LinkedList* list, string datasetLabel, string sortKeyLab
 }
 
 // Run sorting experiment: copy to array, sort both, time both, display comparison table
-void sortingExperiment(LinkedList* list, string datasetLabel, SortKey key)
+void sortingExperiment(LinkedList* list, string datasetLabel, SortKey key , int print_key = 0 )
 {
     using namespace chrono;
     int    n        = countNodes(list);
@@ -479,6 +511,9 @@ void sortingExperiment(LinkedList* list, string datasetLabel, SortKey key)
     long long llMem  = (long long)n * sizeof(Node);                       // node data + embedded next ptr
     long long arrMem = (long long)n * (sizeof(Node) - sizeof(Node*));     // data only, no next ptr needed
 
+    // to only sort when needed without printing 
+    if (print_key == 0 ) {} 
+    if (print_key == 1 ) {delete[] arr; return;  }
     // Display sorted results (top 10 from linked list)
     printSortedResults(list, datasetLabel, keyLabel, 10);
 
@@ -565,7 +600,7 @@ IndexLinkedList* linear_search (LinkedList* list, double distance_threshold)
     return results;
 }
 
-IndexLinkedList* jump_serach (LinkedList* L , int start_age , int end_age ) {
+IndexLinkedList* jump_search (LinkedList* L , int start_age , int end_age ) {
     // This Requires a sorted Linked List 
     // we use jump search to find the starting point in our range of our desired values 
     // then we do linear search basically traversing through the rest of the points 
@@ -638,6 +673,58 @@ IndexLinkedList * jump_search (LinkedList*L , double distance_threshold) // this
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
+void searchComparisons(LinkedList* citya_sorted  , LinkedList * unsorted_citya   ) 
+{
+    // Comparing Linear vs Jump Search on Sorted data 
+    using namespace chrono ; 
+    auto time_start_linear = high_resolution_clock :: now() ; 
+    IndexLinkedList * age_26_45_v1 = linear_search(citya_sorted ,26,45) ; 
+    auto time_end_linear = high_resolution_clock :: now() ; 
+    auto total_time_linear= duration<double, milli>(time_end_linear - time_start_linear).count();
+    // total_time_linear is for linear  search
+
+    auto time_start_jump  =high_resolution_clock:: now() ; 
+    IndexLinkedList * age_26_45_v2 = jump_search(citya_sorted,26,45) ; 
+    auto time_end_jump  = high_resolution_clock :: now() ; 
+    auto total_time_jump = duration<double,milli>(time_end_jump-time_start_jump).count();
+    //tota time Jump is for Jump Search 
+
+    cout << "Time Comparison For Linaer vs Jump Search on Sorted Data " <<endl ; 
+    cout << left << setw(14) << "Search Algorithm"  ; 
+    cout << left << setw(14) << "Duration in MilliSeconds " ;
+    cout << left << setw(14) << "Memory Usage in Bytes " << endl ; 
+    cout << string(64,'-') << endl  ; //reember single quotes are for characters 
+    cout <<  setw(14) <<"Linear Search"  ; 
+    cout << setw(14) << total_time_linear ;
+    cout << setw(14) << countIndexNodes(age_26_45_v1)* sizeof(IndexNode)  << endl ; 
+    cout <<  setw(14) <<"Jump Search "  ; 
+    cout << setw(14) << total_time_jump   ; 
+      cout << setw(14) << countIndexNodes(age_26_45_v2)* sizeof(IndexNode)   << endl  << endl ; 
+
+
+    // Comparison for linear search on sorted vs unsorted data 
+   
+    // unsorted data  
+    auto time_start_unsorted = high_resolution_clock :: now() ; 
+    IndexLinkedList * age_26_45_v3 = linear_search(unsorted_citya ,26,45) ; 
+    auto time_end_unsorted = high_resolution_clock :: now() ; 
+    auto total_time_unsorted= duration<double, milli>(time_end_unsorted - time_start_unsorted).count();
+
+    // for the sorted data we just use the total_tine_linear since it does use sorted dat
+
+    cout << "Time Comparison For Linear Search on sorted vs unsorted data  " <<endl ; 
+    cout << left << setw(14) << "Sorted / Unsorted "  ; 
+    cout << left << setw(14) << "Duration in MilliSeconds " ; 
+    cout << left << setw(14) << "Memory Usage in Bytes" ; 
+    cout << string(64,'-') << endl  ; //reember single quotes are for characters 
+    cout <<  setw(14) <<" Sorted "  ; 
+    cout << setw(14) << total_time_linear   ; 
+    cout << setw(14) << countIndexNodes(age_26_45_v1)* sizeof(IndexNode) << endl ; 
+    cout <<  setw(14) <<"Unsorted"  ; 
+    cout << setw(14) << total_time_unsorted    ; 
+    cout << setw(14) << countIndexNodes(age_26_45_v3)* sizeof(IndexNode) << endl  << endl ; 
+
+}
 int main ()
 {
     /* Working on Question 4 */ 
@@ -645,9 +732,9 @@ int main ()
     LinkedList* citya = implement_dataset("citya.csv");
     LinkedList* cityb = implement_dataset("cityb.csv");
     LinkedList* cityc = implement_dataset("cityc.csv");
-    AgeCategories cityACategories = ageCategorization(citya) ;  // Each object has 5 IndexLists - aka a logic filtering done for the categories 
-    AgeCategories cityBCategories = ageCategorization(cityb);
-    AgeCategories cityCCategories = ageCategorization(cityc) ;
+    //AgeCategories cityACategories = ageCategorization(citya) ;  // Each object has 5 IndexLists - aka a logic filtering done for the categories 
+    //AgeCategories cityBCategories = ageCategorization(cityb);
+    //AgeCategories cityCCategories = ageCategorization(cityc) ;
 
     /*
     dominantTransport(cityACategories.childrenTeenagers , cityBCategories.childrenTeenagers,cityCCategories.childrenTeenagers,"Children and Teenagers") ;
@@ -668,29 +755,30 @@ int main ()
 
     // 5b, 5c, 5d - Emissions per mode of transport, compared across datasets and age groups
 
-    compareAcrossDatasets(cityACategories.childrenTeenagers,            cityBCategories.childrenTeenagers,            cityCCategories.childrenTeenagers,            "6-17 (Children & Teenagers)");
-    compareAcrossDatasets(cityACategories.universityStudentsYoungAdults, cityBCategories.universityStudentsYoungAdults, cityCCategories.universityStudentsYoungAdults, "18-25 (University Students)");
-    compareAcrossDatasets(cityACategories.workingAdultsEarly,           cityBCategories.workingAdultsEarly,           cityCCategories.workingAdultsEarly,           "26-45 (Working Adults Early)");
-    compareAcrossDatasets(cityACategories.workingAdultsLate,            cityBCategories.workingAdultsLate,            cityCCategories.workingAdultsLate,            "46-60 (Working Adults Late)");
-    compareAcrossDatasets(cityACategories.seniorCitizens,               cityBCategories.seniorCitizens,               cityCCategories.seniorCitizens,               "61-100 (Senior Citizens)");
+   // compareAcrossDatasets(cityACategories.childrenTeenagers,            cityBCategories.childrenTeenagers,            cityCCategories.childrenTeenagers,            "6-17 (Children & Teenagers)");
+   // compareAcrossDatasets(cityACategories.universityStudentsYoungAdults, cityBCategories.universityStudentsYoungAdults, cityCCategories.universityStudentsYoungAdults, "18-25 (University Students)");
+   // compareAcrossDatasets(cityACategories.workingAdultsEarly,           cityBCategories.workingAdultsEarly,           cityCCategories.workingAdultsEarly,           "26-45 (Working Adults Early)");
+   // compareAcrossDatasets(cityACategories.workingAdultsLate,            cityBCategories.workingAdultsLate,            cityCCategories.workingAdultsLate,            "46-60 (Working Adults Late)");
+    //compareAcrossDatasets(cityACategories.seniorCitizens,               cityBCategories.seniorCitizens,               cityCCategories.seniorCitizens,               "61-100 (Senior Citizens)");
 
     /* Question 6 */
-    sortingExperiment(citya, "City A", SortKey::Age);
-    sortingExperiment(cityb, "City B", SortKey::DailyDistance);
-    sortingExperiment(cityc, "City C", SortKey::CarbonEmission);
-    Node* current = citya -> Head ; 
+    sortingExperiment(citya, "City A", SortKey::Age , 1);
+    sortingExperiment(cityb, "City B", SortKey::DailyDistance ,1 );
+   // sortingExperiment(cityc, "City C", SortKey::CarbonEmission ,1 );
+   LinkedList * unsorted_a = implement_dataset("citya.csv");
 
-    while (current != nullptr ) 
-    {
-        cout << current ->  Age <<endl ; 
-        current = current -> next ; // I wanna see if ages are actually sorted 
-
-    }
     
-   // Question 7 Implementing search algorithm 
+ // Question 7 Search Algorithms  
 
-   // In essence this is an attempt to apply Jump search on the sorted List of city A - which 
-   // is sorted by Age : 
+ searchComparisons(citya , unsorted_a ) ;
+
+
+// --- Print Results ---
+// printSearchResults(age_group_jump, "Age 26-45 | Jump Search | Sorted");
+// printSearchResults(age_group_linear, "Age 26-45 | Linear Search | Sorted");
+// printSearchResults(age_group_unsorted, "Age 26-45 | Linear Search | Unsorted");
+// printSearchResults(distance_threshold, "Distance > 5km | Jump Search | Sorted");
+// printSearchResults(car_users_cityc, "Car Users | Linear Search | City C");
 
 
 
