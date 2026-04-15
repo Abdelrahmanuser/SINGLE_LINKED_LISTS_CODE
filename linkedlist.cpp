@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <chrono>
 #include <cmath>
+#include <ctime>
+#include <thread>
 
 using namespace std ; 
 enum  class ModeofTransport 
@@ -671,6 +673,7 @@ IndexLinkedList * jump_search (LinkedList*L , double distance_threshold) // this
     return result ; 
 
 }
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 void searchComparisons(LinkedList* citya_sorted  , LinkedList * unsorted_citya   ) 
@@ -725,6 +728,7 @@ void searchComparisons(LinkedList* citya_sorted  , LinkedList * unsorted_citya  
     cout << setw(14) << countIndexNodes(age_26_45_v3)* sizeof(IndexNode) << endl  << endl ; 
 
 }
+
 int main ()
 {
     /* Working on Question 4 */ 
@@ -735,6 +739,8 @@ int main ()
     //AgeCategories cityACategories = ageCategorization(citya) ;  // Each object has 5 IndexLists - aka a logic filtering done for the categories 
     //AgeCategories cityBCategories = ageCategorization(cityb);
     //AgeCategories cityCCategories = ageCategorization(cityc) ;
+
+
 
     /*
     dominantTransport(cityACategories.childrenTeenagers , cityBCategories.childrenTeenagers,cityCCategories.childrenTeenagers,"Children and Teenagers") ;
@@ -762,10 +768,10 @@ int main ()
     //compareAcrossDatasets(cityACategories.seniorCitizens,               cityBCategories.seniorCitizens,               cityCCategories.seniorCitizens,               "61-100 (Senior Citizens)");
 
     /* Question 6 */
-    sortingExperiment(citya, "City A", SortKey::Age , 1);
-    sortingExperiment(cityb, "City B", SortKey::DailyDistance ,1 );
-   // sortingExperiment(cityc, "City C", SortKey::CarbonEmission ,1 );
-   LinkedList * unsorted_a = implement_dataset("citya.csv");
+ sortingExperiment(citya, "City A", SortKey::Age , 0);
+ sortingExperiment(cityb, "City B", SortKey::DailyDistance ,0);
+ sortingExperiment(cityc, "City C", SortKey::CarbonEmission ,1 );
+ LinkedList * unsorted_a = implement_dataset("citya.csv");
 
     
  // Question 7 Search Algorithms  
@@ -781,10 +787,8 @@ int main ()
 // printSearchResults(car_users_cityc, "Car Users | Linear Search | City C");
 
 
-
-
-    
-    
+//working on question 8 performance analysis of search algorithms on sorted vs unsorted data and linear vs jump search on sorted data 
+ return 0 ;
     
     
     
