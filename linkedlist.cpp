@@ -770,7 +770,7 @@ int main ()
     /* Question 6 */
  sortingExperiment(citya, "City A", SortKey::Age , 0);
  sortingExperiment(cityb, "City B", SortKey::DailyDistance ,0);
- sortingExperiment(cityc, "City C", SortKey::CarbonEmission ,1 );
+ sortingExperiment(cityc, "City C", SortKey::CarbonEmission ,0);
  LinkedList * unsorted_a = implement_dataset("citya.csv");
 
     
